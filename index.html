@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <pre>
+<h1>Linear search</h1>
+import time
+import matplotlib.pyplot as plt
+import random
+
+def linear_search(arr, x):
+    for i in range(len(arr)):
+        if arr[i] == x:
+            return i
+    return -1
+
+n_values = [100, 1000, 10000, 100000, 1000000]
+time_values = []
+
+for n in n_values:
+    arr = [random.randint(1, n) for _ in range(n)]
+    x = random.randint(1, n)
+    start_time = time.time()
+    linear_search(arr, x)
+    end_time = time.time()``
+    time_values.append(end_time - start_time)
+
+plt.plot(n_values, time_values)
+plt.title('Linear Search')
+plt.xlabel('Number of Elements')
+plt.ylabel('Time Taken (seconds)')
+plt.show()
+
+    </pre>
+    <pre>
+        <h1> Recursive Binary Search:</h1>
+        import random
+import time
+import matplotlib.pyplot as plt
+
+def binary_search_recursive(arr, low, high, x):
+    if high >= low:
+        mid = (high + low) // 2
+        if arr[mid] == x:
+            return mid
+        elif arr[mid] > x:
+            return binary_search_recursive(arr, low, mid - 1, x)
+        else:
+            return binary_search_recursive(arr, mid + 1, high, x)
+    else:
+        return -1
+
+def test_binary_search_recursive():
+    sizes = [10, 100, 1000, 10000, 100000]
+    times = []
+
+    for n in sizes:
+        arr = [random.randint(1, n) for _ in range(n)]
+        arr.sort()
+        x = random.randint(1, n)
+        start_time = time.time()
+        result = binary_search_recursive(arr, 0, n - 1, x)
+        end_time = time.time()
+        times.append(end_time - start_time)
+
+    plt.plot(sizes, times, marker='o')
+    plt.title("Recursive Binary Search Performance")
+    plt.xlabel("Size of Array")
+    plt.ylabel("Time Taken (in seconds)")
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.grid(True)
+    plt.show()
+
+test_binary_search_recursive()
+    </pre>
+    <pre>
+        <h1> Interpolation Search:</h1>
+        def interpolation_search(arr, x):
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high and arr[low] <= x <= arr[high]:
+        if arr[low] == arr[high]:
+            if arr[low] == x:
+                return low
+            return -1
+        
+        pos = low + ((high - low) // (arr[high] - arr[low]) * (x - arr[low]))
+        
+        if arr[pos] == x:
+            return pos
+        elif arr[pos] < x:
+            low = pos + 1
+        else:
+            high = pos - 1
+    
+    return -1
+
+arr = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+x = 70
+result = interpolation_search(arr, x)
+if result != -1:
+    print(f"Element found at index {result}")
+else:
+    print("Element not found")
+
+    </pre>
+    <pre>
+        <h1>Pattern Matching:</h1>
+        def search(pat, txt):
+    n = len(txt)
+    m = len(pat)
+    result = []
+    
+    for i in range(n - m + 1):
+        j = 0
+        while j < m:
+            if txt[i + j] != pat[j]:
+                break
+            j += 1
+        if j == m:
+            result.append(i)
+    return result
+
+txt = "AABAACAADAABAABA"
+pat = "AABA"
+result = search(pat, txt)
+print("Pattern found at indices:", result)
+
+    </pre>
+    <pre>
+        <h1> Insertion Sort:</h1>
+        import matplotlib.pyplot as plt
+import random
+import time
+
+def insertion_sort(arr):
+    n = len(arr)
+    for i in range(1, n):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+def generate_list(n):
+    return [random.randint(1, 1000) for _ in range(n)]
+
+def measure_time(n):
+    arr = generate_list(n)
+    start_time = time.time()
+    insertion_sort(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+def plot_graph(n_list):
+    time_list = [measure_time(n) for n in n_list]
+    plt.plot(n_list, time_list, 'o-')
+    plt.xlabel('Number of Elements (n)')
+    plt.ylabel('Time Taken (seconds)')
+    plt.title('Insertion Sort Time Complexity')
+    plt.show()
+
+n_list = [100, 500, 1000, 2000, 5000, 10000]
+plot_graph(n_list)
+
+    </pre>
+    <pre>
+        <h1>Heap Sort:</h1>
+        import matplotlib.pyplot as plt
+import random
+import time
+
+def heapify(arr, n, i):
+    largest = i
+    l = 2 * i + 1
+    r = 2 * i + 2
+
+    if l < n and arr[i] < arr[l]:
+        largest = l
+
+    if r < n and arr[largest] < arr[r]:
+        largest = r
+
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)
+
+def heap_sort(arr):
+    n = len(arr)
+
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+    for i in range(n - 1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]
+        heapify(arr, i, 0)
+
+def generate_list(n):
+    return [random.randint(1, 1000) for i in range(n)]
+
+def measure_time(n):
+    arr = generate_list(n)
+    start_time = time.time()
+    heap_sort(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+def plot_graph(n_list):
+    time_list = [measure_time(n) for n in n_list]
+    plt.plot(n_list, time_list, 'o-')
+    plt.xlabel('n')
+    plt.ylabel('Time (s)')
+    plt.title('Heap Sort')
+    plt.show()
+
+n_list = [100, 500, 1000, 2000, 5000, 10000]
+plot_graph(n_list)
+
+    </pre>
+    <pre>
+        <h1>Breadth-First Search (BFS):</h1>
+        import networkx as nx
+import matplotlib.pyplot as plt
+
+graph = {
+    '5': ['3', '7'],
+    '3': ['2', '4'],
+    '7': ['8'],
+    '2': [],
+    '4': ['8'],
+    '8': []
+}
+
+G = nx.Graph(graph)
+nx.draw(G, with_labels=True)
+plt.show()
+
+visited = []
+queue = []
+
+def bfs(visited, graph, node):
+    visited.append(node)
+    queue.append(node)
+
+    while queue:
+        m = queue.pop(0)
+        print(m, end=" ")
+
+        for neighbour in graph[m]:
+            if neighbour not in visited:
+                visited.append(neighbour)
+                queue.append(neighbour)
+
+print("Following is the Breadth-First Search:")
+bfs(visited, graph, '5')
+
+    </pre>
+    <pre>
+        <h1>Depth-First Search (DFS):</h1>
+        import networkx as nx
+import matplotlib.pyplot as plt
+
+g = {
+    '5': ['3', '7'],
+    '3': ['2', '4'],
+    '7': ['8'],
+    '2': [],
+    '4': ['8'],
+    '8': []
+}
+
+G = nx.Graph(g)
+nx.draw(G, with_labels=True)
+plt.show()
+
+visited = set()
+
+def dfs(visited, g, node):
+    if node not in visited:
+        print(node)
+        visited.add(node)
+        for neighbour in g[node]:
+            dfs(visited, g, neighbour)
+
+print("Following is the Depth-First Search:")
+dfs(visited, g, '5')
+
+    </pre>
+    <pre>
+        <h1> Dijkstra's Algorithm:</h1>
+        import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.Graph()
+nodes_list = [1, 2, 3, 4, 5, 6, 7]
+edges_list = [(1, 2, 13), (1, 4, 4), (2, 3, 2), (2, 4, 6), (2, 5, 4), (3, 5, 5), (3, 6, 6), (4, 5, 3), (4, 7, 4), (5, 6, 8), (5, 7, 7), (6, 7, 3)]
+G.add_nodes_from(nodes_list)
+G.add_weighted_edges_from(edges_list)
+
+plt.figure()
+pos = nx.spring_layout(G)
+weight_labels = nx.get_edge_attributes(G, 'weight')
+nx.draw(G, pos, font_color='white', node_shape='s', with_labels=True)
+nx.draw_networkx_edge_labels(G, pos, edge_labels=weight_labels)
+plt.show()
+
+p1 = nx.shortest_path(G, source=1, weight="weight")
+p1to6 = nx.shortest_path(G, source=1, target=6, weight="weight")
+length = nx.shortest_path_length(G, source=1, target=6, weight="weight")
+
+print("All shortest paths from node 1:", p1)
+print("Shortest path from node 1 to node 6:", p1to6)
+print("Length of the shortest path from node 1 to node 6:", length)
+
+    </pre>
+    <pre>
+        <h1> Prim's Algorithm:</h1>
+        import matplotlib.pyplot as plt
+import networkx as nx
+import pylab
+
+# Create an empty undirected weighted graph
+G = nx.Graph()
+
+# Add nodes
+nodes_list = [1, 2, 3, 4, 5, 6, 7]
+G.add_nodes_from(nodes_list)
+
+# Add weighted edges
+edges_list = [
+    (1, 2, 1), (1, 4, 4), (2, 3, 2), (2, 4, 6), (2, 5, 4),
+    (3, 5, 5), (3, 6, 6), (4, 5, 3), (4, 7, 4), (5, 6, 8), (5, 7, 7)
+]
+G.add_weighted_edges_from(edges_list)
+
+# Draw the graph
+pos = nx.spring_layout(G)
+pylab.figure(1)
+nx.draw(G, pos, with_labels=True)
+nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'))
+
+# Calculate a minimum spanning tree using Prim's algorithm
+mst = nx.minimum_spanning_tree(G, algorithm='prim')
+print("Edges in the minimum spanning tree:", sorted(mst.edges(data=True)))
+
+plt.show()
+
+    </pre>
+    <pre>
+        <h1> Floyd’s Algorithm:</h1>
+        INF = float('inf')
+
+def floyd_algorithm(graph):
+    n = len(graph)
+    dist = [[INF for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            if graph[i][j] != 0:
+                dist[i][j] = graph[i][j]
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    return dist
+
+graph = [
+    [0, 5, INF, 10],
+    [INF, 0, 3, INF],
+    [INF, INF, 0, 1],
+    [INF, INF, INF, 0]
+]
+
+result = floyd_algorithm(graph)
+for row in result:
+    print(row)
+
+    </pre>
+    <pre>
+        <h1>Warshall’s Algorithm for Transitive Closure</h1>
+        def warshall_algorithm(graph):
+    n = len(graph)
+    transitive_closure = [row[:] for row in graph]
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                transitive_closure[i][j] = (transitive_closure[i][j] or (transitive_closure[i][k] and transitive_closure[k][j]))
+    return transitive_closure
+
+graph = [
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
+    [1, 0, 0, 0]
+]
+
+result = warshall_algorithm(graph)
+for row in result:
+    print(row)
+
+    </pre>
+    <pre>
+        <h1>Finding Maximum and Minimum Using Divide and Conquer:</h1>
+        def find_max_min(arr):
+    if len(arr) == 1:
+        return arr[0], arr[0]
+    elif len(arr) == 2:
+        if arr[0] > arr[1]:
+            return arr[0], arr[1]
+        else:
+            return arr[1], arr[0]
+    else:
+        mid = len(arr) // 2
+        left_max, left_min = find_max_min(arr[:mid])
+        right_max, right_min = find_max_min(arr[mid:])
+        return max(left_max, right_max), min(left_min, right_min)
+
+arr = [3, 1, 5, 2, 9, 7]
+max_num, min_num = find_max_min(arr)
+print("Maximum number:", max_num)
+print("Minimum number:", min_num)
+
+    </pre>
+    <pre>
+        <h1>Merge Sort:</h1>
+        import random
+import time
+import matplotlib.pyplot as plt
+
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        i = j = k = 0
+
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+def test_merge_sort(n):
+    arr = [random.randint(1, 100) for _ in range(n)]
+    start_time = time.time()
+    merge_sort(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+if __name__ == "__main__":
+    ns = [10, 100, 1000, 10000, 100000]
+    times = [test_merge_sort(n) for n in ns]
+    print(times)
+
+    plt.plot(ns, times, 'o-')
+    plt.xlabel('Number of elements (n)')
+    plt.ylabel('Time taken (s)')
+    plt.title('Merge Sort Time Complexity')
+    plt.show()
+
+    </pre>
+    <pre>
+        <h1>Quick Sort:</h1>
+        import random
+import time
+import matplotlib.pyplot as plt
+
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[0]
+    left = [x for x in arr[1:] if x < pivot]
+    right = [x for x in arr[1:] if x >= pivot]
+    return quicksort(left) + [pivot] + quicksort(right)
+
+def measure_time(n, num_repeats=5):
+    times = []
+    for _ in range(num_repeats):
+        arr = [random.randint(0, 1000000) for _ in range(n)]
+        start_time = time.time()
+        quicksort(arr)
+        end_time = time.time()
+        times.append(end_time - start_time)
+    return sum(times) / len(times)
+
+if __name__ == "__main__":
+    num_repeats = 10
+    max_n = 10000
+    step_size = 1000
+    ns = range(1000, max_n + step_size, step_size)
+    times = [measure_time(n, num_repeats) for n in ns]
+    print(times)
+
+    plt.plot(ns, times, 'o-', color='green')
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xlabel('Number of elements (n)')
+    plt.ylabel('Time taken (s)')
+    plt.title('Quick Sort Time Complexity')
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+    plt.show()
+
+    </pre>
+    <pre>
+        <h1>N-Queens Problem Using Backtracking:</h1>
+        def is_safe(board, row, col, n):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    for i, j in zip(range(row, n, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    return True
+
+def solve_n_queens(board, col, n):
+    if col >= n:
+        return True
+    for row in range(n):
+        if is_safe(board, row, col, n):
+            board[row][col] = 1
+            if solve_n_queens(board, col + 1, n):
+                return True
+            board[row][col] = 0
+    return False
+
+def print_board(board, n):
+    for i in range(n):
+        for j in range(n):
+            print("Q" if board[i][j] else ".", end=" ")
+        print()
+
+def n_queens(n):
+    board = [[0 for _ in range(n)] for _ in range(n)]
+    if not solve_n_queens(board, 0, n):
+        print("Solution does not exist.")
+        return False
+    print("Solution:")
+    print_board(board, n)
+    return True
+
+if __name__ == "__main__":
+    n = int(input("Enter the number of queens: "))
+    n_queens(n)
+
+    </pre>
+    <pre>
+        <h1>Traveling Salesperson Problem (TSP) Using Brute Force and Nearest Neighbor:</h1>
+        import itertools
+import time
+
+def distance(city1, city2):
+    return ((city1[0] - city2[0]) ** 2 + (city1[1] - city2[1]) ** 2) ** 0.5
+
+def tsp_brute_force(cities):
+    permutations = itertools.permutations(cities)
+    shortest_path = float('inf')
+    shortest_path_order = None
+
+    for permutation in permutations:
+        path_length = 0
+        for i in range(len(permutation) - 1):
+            path_length += distance(permutation[i], permutation[i + 1])
+        path_length += distance(permutation[-1], permutation[0])
+
+        if path_length < shortest_path:
+            shortest_path = path_length
+            shortest_path_order = permutation
+
+    return shortest_path, shortest_path_order
+
+def tsp_nearest_neighbor(cities):
+    current_city = cities[0]
+    visited_cities = [current_city]
+    unvisited_cities = set(cities[1:])
+
+    while unvisited_cities:
+        nearest_neighbor = None
+        nearest_distance = float('inf')
+
+        for city in unvisited_cities:
+            distance_to_city = distance(current_city, city)
+            if distance_to_city < nearest_distance:
+                nearest_distance = distance_to_city
+                nearest_neighbor = city
+
+        visited_cities.append(nearest_neighbor)
+        unvisited_cities.remove(nearest_neighbor)
+        current_city = nearest_neighbor
+
+    total_distance = 0
+    for i in range(len(visited_cities) - 1):
+        total_distance += distance(visited_cities[i], visited_cities[i + 1])
+    total_distance += distance(visited_cities[-1], visited_cities[0])
+
+    return total_distance, visited_cities
+
+cities = [(0,0),(1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9)]
+
+# Brute force solution
+start_time = time.time()
+optimal_path_length, optimal_path_order = tsp_brute_force(cities)
+end_time = time.time()
+print("Optimal path length:", optimal_path_length)
+print("Optimal path order:", optimal_path_order)
+print("Time taken (brute force):", end_time - start_time, "seconds")
+
+# Nearest neighbor solution
+start_time = time.time()
+approximate_path_length, approximate_path_order = tsp_nearest_neighbor(cities)
+end_time = time.time()
+print("Approximate path length:", approximate_path_length)
+print("Approximate path order:", approximate_path_order)
+print("Time taken (nearest neighbor):", end_time - start_time, "seconds")
+
+    </pre>
+    <pre>
+        <h1>Randomized Algorithm for Finding the k-th Smallest Number:</h1>
+        N = 0
+vals = []
+wts = []
+cap = 0
+mval = 0
+
+def get_weight_and_value(incl):
+    w, v = 0, 0
+    for i in range(N):
+        if incl[i]:
+            w += wts[i]
+            v += vals[i]
+    return w, v
+
+def print_subset(incl):
+    val = 0
+    included_items = []
+    for i in range(N):
+        if incl[i]:
+            included_items.append(wts[i])
+            val += vals[i]
+    print(f"Included = {included_items}; Total value = {val}")
+
+def find_knapsack(incl, i):
+    global mval
+    cwt, cval = get_weight_and_value(incl)
+
+    if cwt <= cap and cval > mval:
+        print_subset(incl)
+        mval = cval
+
+    if i == N or cwt >= cap:
+        return
+
+    use = incl[:]
+    nouse = incl[:]
+
+    use[i] = True
+    nouse[i] = False
+
+    find_knapsack(use, i + 1)
+    find_knapsack(nouse, i + 1)
+
+if __name__ == "__main__":
+    N = int(input("Enter the number of elements: "))
+    vals = []
+    wts = []
+    incl = [False] * N
+
+    for i in range(N):
+        weight, value = map(int, input(f"Enter weight and value for element {i+1}: ").split())
+        wts.append(weight)
+        vals.append(value)
+
+    cap = int(input("Enter knapsack capacity: "))
+    find_knapsack(incl, 0)
+
+    </pre>
+    <pre>
+        <h1>Traveling Salesperson Problem (TSP) Using Branch and Bound:</h1>
+        import sys
+
+n = 0
+a = []
+visited = []
+cost = 0
+
+def get():
+    global n, a, visited
+    n = int(input("Enter the number of cities: "))
+
+    print("\nEnter the Cost Matrix:")
+    for i in range(n):
+        row = list(map(int, input(f"Enter row {i+1} values: ").split()))
+        a.append(row)
+        visited.append(0)
+
+    print("\nThe cost matrix is:")
+    for row in a:
+        print(row)
+
+def least(city):
+    min_cost = 99999
+    next_city = 99999
+    kmin = 99999
+
+    for i in range(n):
+        if a[city][i] != 0 and visited[i] == 0:
+            temp_cost = a[i][0] + a[city][i]
+            if temp_cost < min_cost:
+                min_cost = temp_cost
+                kmin = a[city][i]
+                next_city = i
+
+    if min_cost != 99999:
+        global cost
+        cost += kmin
+
+    return next_city
+
+def mincost(city):
+    visited[city] = 1
+    print(f"{city + 1} ->", end=" ")
+    next_city = least(city)
+
+    if next_city == 99999:
+        next_city = 0
+        print(f"{next_city + 1}")
+        global cost
+        cost += a[city][next_city]
+        return
+
+    mincost(next_city)
+
+def put():
+    print("\nMinimum cost:", cost)
+
+if __name__ == "__main__":
+    get()
+    print("\nThe Path is:")
+    mincost(0)
+    put()
+
+    </pre>
+</body>
+</html>
